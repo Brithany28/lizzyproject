@@ -17,6 +17,13 @@ mongoose.set('useFindAndModify', false) //used because of deprecation issue
 
 //routes
 app.use('/api', require('./routes/post'))
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static('my-app/build'))
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(__dirname, 'my-app', 'build', 'index.html'))
+    })
+}
 
-const PORT = 5000
+const PORT = process.env.PORT || 5000
+
 app.listen(PORT, ()=>console.log(`The server is running on port ${PORT}`))
